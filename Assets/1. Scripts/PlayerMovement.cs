@@ -4,12 +4,12 @@ using UnityEngine.InputSystem;
 
 public class PlayerMovement : MonoBehaviour
 {
-    public float moveSpeed = 5f; // 플레이어 움직임 속도 처리
+    public float moveSpeed = 1f; // 플레이어 움직임 속도 처리
     public float rotateSpeed = 180f; // 플레이어 회전 속도 처리
 
-    public PlayerInput playerInput; // 플레이어의 입력을 감지하는 컴포넌트
+    private PlayerInput playerInput; // 플레이어의 입력을 감지하는 컴포넌트
 
-    public Rigidbody rigidbody; // 플레이어의 리지드바디 컴포넌트
+    private Rigidbody rigidbody; // 플레이어의 리지드바디 컴포넌트
 
     void Start()
     {
@@ -43,6 +43,6 @@ public class PlayerMovement : MonoBehaviour
         // 상대적으로 회전할 거리 계산
         float turn = playerInput.rotate * rotateSpeed * Time.deltaTime;
         // 리지드바디를 이용해 플레이어 회전
-        rigidbody.rotation = playerRigidbody.rotation +
+        rigidbody.rotation = rigidbody.rotation * Quaternion.Euler(0, turn, 0f);
     }
 }
