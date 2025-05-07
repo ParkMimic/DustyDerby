@@ -35,6 +35,5 @@ public class GameManager : MonoBehaviour
     {
         // 점수 추가
         score += newScore;
-
     }
 }

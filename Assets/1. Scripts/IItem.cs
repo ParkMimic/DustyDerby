@@ -1,9 +1,6 @@
 using UnityEngine;
 
-public class IItem : MonoBehaviour
+public interface IItem
 {
-    void Item()
-    {
-
-    }
+    void Use(GameObject target);
 }
