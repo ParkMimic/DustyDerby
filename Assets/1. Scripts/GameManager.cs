@@ -20,11 +20,13 @@ public class GameManager : MonoBehaviour
     // 싱글턴이 할당 될 instance 변수
     private static GameManager m_instance;
 
-    private int score = 0; // 현재 게임 점수
+    private int score; // 현재 게임 점수
     public bool isStun { get; private set; }
 
     void Awake()
     {
+        score = 0;
+
         if (instance != this)
         {
             Destroy(gameObject);

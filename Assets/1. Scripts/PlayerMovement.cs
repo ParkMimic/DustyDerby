@@ -45,4 +45,12 @@ public class PlayerMovement : MonoBehaviour
         // 리지드바디를 이용해 플레이어 회전
         rigidbody.rotation = rigidbody.rotation * Quaternion.Euler(0, turn, 0f);
     }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.tag == "coin")
+        {
+
+        }
+    }
 }

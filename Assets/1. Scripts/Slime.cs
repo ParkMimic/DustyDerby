@@ -13,6 +13,7 @@ public class Slime : MonoBehaviour
 
     public float timeBetAttack = 0.5f; // 공격 간격
     private float lastAttackTime; // 마지막 공격 시점
+    private bool isStunned = false;
 
     // 추적할 대상이 있음을 알려주는 컴포넌트
     private bool hasTarget
@@ -29,6 +30,7 @@ public class Slime : MonoBehaviour
             return false;
         }
     }
+
 
     private void Awake()
     {
@@ -71,8 +73,12 @@ public class Slime : MonoBehaviour
                 if (distance > maxChaseDistance)
                 {
                     // 플레이어가 너무 멀어지면 추적 중지!
-                    Debug.Log("추적을 중지합니다.");
                     targetEntity = null;
+                    navMeshAgent.isStopped = true;
+                }
+
+                if (distance < 0.3f)
+                {
                     navMeshAgent.isStopped = true;
                 }
             }
@@ -96,7 +102,6 @@ public class Slime : MonoBehaviour
                     {
                         // 추적 대상을 해당 livingEntity로 변경
                         targetEntity = livingEntity;
-                        Debug.Log("플레이어 감지!");
 
                         // for 루프 즉시 정지
                         break;
@@ -107,5 +112,25 @@ public class Slime : MonoBehaviour
             // 0.25초 주기로 처리 반복
             yield return new WaitForSeconds(0.25f);
         }
+    }
+
+    public void Stun()
+    {
+        if (!isStunned)
+        {
+            StartCoroutine(StunRoutine());
+        }
+    }
+
+    IEnumerator StunRoutine()
+    {
+        isStunned = true;
+        // 예: 속도 0으로 만들거나 AI 중지
+        navMeshAgent.isStopped = true;
+
+        yield return new WaitForSeconds(2f); // 2초 기절
+
+        navMeshAgent.isStopped = false;
+        isStunned = false;
     }
 }
