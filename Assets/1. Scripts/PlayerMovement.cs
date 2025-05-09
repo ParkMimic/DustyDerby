@@ -9,7 +9,7 @@ public class PlayerMovement : MonoBehaviour
 
     private PlayerInput playerInput; // 플레이어의 입력을 감지하는 컴포넌트
 
-    private Rigidbody rigidbody; // 플레이어의 리지드바디 컴포넌트
+    private new Rigidbody rigidbody; // 플레이어의 리지드바디 컴포넌트
 
     void Start()
     {
@@ -44,13 +44,5 @@ public class PlayerMovement : MonoBehaviour
         float turn = playerInput.rotate * rotateSpeed * Time.deltaTime;
         // 리지드바디를 이용해 플레이어 회전
         rigidbody.rotation = rigidbody.rotation * Quaternion.Euler(0, turn, 0f);
-    }
-
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.tag == "coin")
-        {
-
-        }
     }
 }

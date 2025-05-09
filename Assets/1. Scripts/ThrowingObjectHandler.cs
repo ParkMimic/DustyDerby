@@ -5,14 +5,20 @@ public class ThrowingObjectHandler : MonoBehaviour
 {
     public Transform holdPosition; // 머리 위 위치
     public float throwForce = 10f;
+
     private GameObject heldObject;
+    private PlayerInput playerInput;
+
+    private void Start()
+    {
+        playerInput = GetComponent<PlayerInput>();
+    }
 
     void Update()
     {
-        if (heldObject != null && Input.GetMouseButtonDown(0))
+        if (heldObject != null && playerInput.thrown)
         {
             ThrowObject();
-            Debug.Log("던지기 시도");
         }
     }
 
@@ -27,29 +33,53 @@ public class ThrowingObjectHandler : MonoBehaviour
     void PickUpObject(GameObject obj)
     {
         heldObject = obj;
-        Rigidbody rb = obj.GetComponent<Rigidbody>();
-        rb.isKinematic = true;
+        Rigidbody rigidbody = obj.GetComponent<Rigidbody>();
+        rigidbody.isKinematic = true;
+        rigidbody.linearVelocity = Vector3.zero;
+        rigidbody.angularVelocity = Vector3.zero;
+
+        // 캐릭터와 물체 충돌 무시
+        Collider objectCollider = obj.GetComponent<Collider>();
+        Collider playerCollider = GetComponent<Collider>(); // 캐릭터의 Collider
+        if (objectCollider != null && playerCollider != null)
+        {
+            Physics.IgnoreCollision(objectCollider, playerCollider, true);
+        }
+
+        // 부모로 붙이고 위치 지정
         obj.transform.SetParent(holdPosition);
         obj.transform.localPosition = Vector3.up * 1.5f;
+
+        // 방향 정렬
+        obj.transform.localRotation = Quaternion.identity;
+
+        // 물체의 회전 고정
+        rigidbody.constraints = RigidbodyConstraints.FreezeAll;
     }
 
     void ThrowObject()
     {
-        Rigidbody rb = heldObject.GetComponent<Rigidbody>();
-        heldObject.transform.SetParent(null);
-        rb.isKinematic = false;
-        rb.AddForce(transform.forward * throwForce, ForceMode.Impulse);
+        Rigidbody rigidbody = heldObject.GetComponent<Rigidbody>();
 
-        // 태그 잠시 변경
-        heldObject.tag = "Untagged"; // 나중에 다시 바꿀 태그
-        StartCoroutine(ResetTag(heldObject, 0.5f)); // 0.5초 후 복원
+        // 물체를 손에서 분리
+        heldObject.transform.SetParent(null);
+        rigidbody.isKinematic = false;
+
+        // 플레이어가 바라보는 방향으로 힘을 줌
+        Vector3 throwDirection = transform.forward + Vector3.up * 0.5f; // 약간 위로
+        rigidbody.AddForce(throwDirection.normalized * throwForce, ForceMode.VelocityChange);
+
+        // 충돌 다시 활성화
+        Collider objectCollider = heldObject.GetComponent<Collider>();
+        Collider playerCollider = GetComponent<Collider>();
+        if (objectCollider != null && playerCollider != null)
+        {
+            Physics.IgnoreCollision(objectCollider, playerCollider, false);
+        }
+
+        // 회전 고정 해제
+        rigidbody.constraints = RigidbodyConstraints.None;
 
         heldObject = null;
-    }
-
-    IEnumerator ResetTag(GameObject obj, float delay)
-    {
-        yield return new WaitForSeconds(delay);
-        if (obj != null) obj.tag = "Throwable";
     }
 }

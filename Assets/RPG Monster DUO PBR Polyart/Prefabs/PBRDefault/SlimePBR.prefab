@@ -452,9 +452,9 @@ GameObject:
   - component: {fileID: 8948315463652391404}
   - component: {fileID: 2006080920991216105}
   - component: {fileID: 379085125534350525}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: SlimePBR
-  m_TagString: Untagged
+  m_TagString: Monster
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

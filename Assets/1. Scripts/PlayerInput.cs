@@ -8,10 +8,12 @@ public class PlayerInput : MonoBehaviour
 {
     public string moveAxisName = "Vertical"; // 앞뒤 움직임을 위한 입력축
     public string rotateAxisName = "Horizontal"; // 회전을 위한 입력축
+    public string throwButton = "Fire1";
 
     // 값 할당은 내부에서만 가능
     public float move { get; private set; }
     public float rotate { get; private set; }
+    public bool thrown { get; private set; }
 
     // 매 프레임 사용자의 입력을 감지
     void Update()
@@ -26,5 +28,6 @@ public class PlayerInput : MonoBehaviour
         // move에 관한 입력 감지
         move = Input.GetAxis(moveAxisName);
         rotate = Input.GetAxis(rotateAxisName);
+        thrown = Input.GetButton(throwButton);
     }
 }
