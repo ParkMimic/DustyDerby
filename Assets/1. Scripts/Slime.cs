@@ -3,7 +3,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class Slime : MonoBehaviour
+public class Slime : LivingEntity
 {
     public LayerMask player; // 플레이어 마스크
     public float maxChaseDistance = 1f; // 최대 추적 거리
@@ -13,7 +13,6 @@ public class Slime : MonoBehaviour
 
     public float timeBetAttack = 0.5f; // 공격 간격
     private float lastAttackTime; // 마지막 공격 시점
-    public bool isStunned = false;
 
     // 추적할 대상이 있음을 알려주는 컴포넌트
     private bool hasTarget
@@ -58,12 +57,18 @@ public class Slime : MonoBehaviour
     // 주기적으로 추적해야 할 대상의 위치를 찾아 경로 갱신
     IEnumerator UpdatePath()
     {
-        // 살아있는 동안 무한 루프
         while (gameObject != null)
         {
+            // 기절 상태일 때는 아예 이동을 멈추고 루프를 지속적으로 돌면서 대기
+            if (isStun)
+            {
+                navMeshAgent.isStopped = true;
+                yield return new WaitForSeconds(0.25f); // 잠시 대기
+                continue; // 기절 중이면 이동 명령을 아예 실행하지 않음
+            }
+
             if (hasTarget)
             {
-                // 추적 대상 존재: 경로를 갱신하고 AI 이동을 계속 진행
                 navMeshAgent.isStopped = false;
                 navMeshAgent.SetDestination(targetEntity.transform.position);
 
@@ -71,7 +76,6 @@ public class Slime : MonoBehaviour
 
                 if (distance > maxChaseDistance)
                 {
-                    // 플레이어가 너무 멀어지면 추적 중지!
                     targetEntity = null;
                     navMeshAgent.isStopped = true;
                 }
@@ -83,50 +87,42 @@ public class Slime : MonoBehaviour
             }
             else
             {
-                // 추적 대상 없음: AI 이동 중지
                 navMeshAgent.isStopped = true;
 
-                // 20 유닛의 반지름을 가진 구를 그렸을 때 구와 겹치는 모든 콜라이더를 가져옴
-                // 단, player 레이어를 가진 콜라이더만 가져오도록 필터링
                 Collider[] colliders = Physics.OverlapSphere(transform.position, 1f, player);
-
-                // 모든 콜라이더를 순회하며 살아있는 LivingEntity 찾기
                 for (int i = 0; i < colliders.Length; i++)
                 {
-                    // 콜라이더로부터 LivingEntity 가져오기
                     LivingEntity livingEntity = colliders[i].GetComponent<LivingEntity>();
-
-                    // LivingEntity 컴포넌트가 존재한다면
                     if (livingEntity != null)
                     {
-                        // 추적 대상을 해당 livingEntity로 변경
                         targetEntity = livingEntity;
-
-                        // for 루프 즉시 정지
                         break;
                     }
                 }
             }
-            // 0.25초 주기로 처리 반복
+
             yield return new WaitForSeconds(0.25f);
         }
     }
 
-    public void Stun()
+    // 기절을 호출하는 오버라이드
+    public override void Stun()
     {
-        if (isStunned == false)
-        {
-            StartCoroutine(StunWait());
-        }
+        if (isStun) return; // 이미 기절 상태라면 실행 안 함.
+
+        isStun = true;
+        Debug.Log("슬라임 기절 시작");
+
+        navMeshAgent.isStopped = true; // 기절 상태에서는 이동 못 함.
+
+        StartCoroutine(ResumeAfterStun());
     }
 
-    IEnumerator StunWait()
+    private IEnumerator ResumeAfterStun()
     {
-        // 기절로 이동 멈춤
-        isStunned = true;
-        navMeshAgent.isStopped = true;
-
-        yield return new WaitForSeconds(2f);
-        isStunned = false;
+        yield return new WaitForSeconds(2f); // 2초 동안 기절 상태 유지
+        isStun = false; // 기절 해제
+        navMeshAgent.isStopped = false; // 기절 해제 후 이동 재개
+        Debug.Log("슬라임 기절 끝");
     }
 }

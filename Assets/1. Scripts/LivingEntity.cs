@@ -1,20 +1,33 @@
 using UnityEngine;
+using System.Collections;
 
 public class LivingEntity : MonoBehaviour
 {
-    public bool isStun { get; private set; }
+    public bool isStun { get; protected set; }
+
+    private Coroutine stunCoroutine;
 
     protected virtual void OnEnable()
     {
-        // 기절하지 않은 상태로 시작
         isStun = false;
     }
-    
+
     public virtual void Stun()
     {
-        if (isStun != true)
+        if (!isStun)
         {
-            isStun = true;
+            if (stunCoroutine != null)
+            {
+                StopCoroutine(stunCoroutine);
+            }
+            stunCoroutine = StartCoroutine(StunWait());
         }
+    }
+
+    IEnumerator StunWait()
+    {
+        isStun = true;
+        yield return new WaitForSeconds(2f);
+        isStun = false;
     }
 }

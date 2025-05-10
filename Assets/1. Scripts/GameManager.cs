@@ -3,6 +3,9 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
+    public GameObject winText;
+    public GameObject introText;
+
     public static GameManager instance
     {
         get
@@ -37,5 +40,16 @@ public class GameManager : MonoBehaviour
     {
         // 점수 추가
         score += newScore;
+
+        if (score >= 12)
+        {
+            Win();
+        }
+    }
+
+    void Win()
+    {
+        Time.timeScale = 0;
+        return;
     }
 }

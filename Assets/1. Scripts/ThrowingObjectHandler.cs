@@ -66,8 +66,15 @@ public class ThrowingObjectHandler : MonoBehaviour
         rigidbody.isKinematic = false;
 
         // 플레이어가 바라보는 방향으로 힘을 줌
-        Vector3 throwDirection = transform.forward + Vector3.up * 0.5f; // 약간 위로
+        Vector3 throwDirection = transform.forward + Vector3.up * 0.2f; // 약간 위로
         rigidbody.AddForce(throwDirection.normalized * throwForce, ForceMode.VelocityChange);
+
+        // 기절 가능하게 표시
+        ThrowableObject throwable = heldObject.GetComponent<ThrowableObject>();
+        if (throwable != null)
+        {
+            throwable.isThrown = true; // 추가됨
+        }
 
         // 충돌 다시 활성화
         Collider objectCollider = heldObject.GetComponent<Collider>();
@@ -79,6 +86,12 @@ public class ThrowingObjectHandler : MonoBehaviour
 
         // 회전 고정 해제
         rigidbody.constraints = RigidbodyConstraints.None;
+
+        if (throwable != null)
+        {
+            Debug.Log("던짐 상태 true");
+            throwable.isThrown = true;
+        }
 
         heldObject = null;
     }

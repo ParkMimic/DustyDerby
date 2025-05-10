@@ -233,7 +233,6 @@ GameObject:
   m_Component:
   - component: {fileID: 4358697761044548}
   - component: {fileID: 137218116663036162}
-  - component: {fileID: 5571906131026923141}
   m_Layer: 0
   m_Name: Slime
   m_TagString: Untagged
@@ -322,27 +321,6 @@ SkinnedMeshRenderer:
     m_Center: {x: -0.3588662, y: 0.1749603, z: 0.000000059604645}
     m_Extent: {x: 0.62954795, y: 0.6683546, z: 0.4895594}
   m_DirtyAABB: 0
---- !u!65 &5571906131026923141
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1592125234692788}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 0.97911906, y: 0.965333, z: 0.8722864}
-  m_Center: {x: 0.000000057309176, y: 0.00504311, z: 0.48208767}
 --- !u!1 &1609119223618932
 GameObject:
   m_ObjectHideFlags: 0
@@ -450,8 +428,9 @@ GameObject:
   - component: {fileID: 4047972025199878}
   - component: {fileID: 95457531584545886}
   - component: {fileID: 8948315463652391404}
-  - component: {fileID: 2006080920991216105}
-  - component: {fileID: 379085125534350525}
+  - component: {fileID: 3205972665122900356}
+  - component: {fileID: 3841113782440593663}
+  - component: {fileID: 1422320547819187610}
   m_Layer: 11
   m_Name: SlimePBR
   m_TagString: Monster
@@ -520,7 +499,7 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
---- !u!114 &2006080920991216105
+--- !u!114 &3205972665122900356
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -537,7 +516,7 @@ MonoBehaviour:
     m_Bits: 512
   maxChaseDistance: 1
   timeBetAttack: 10
---- !u!114 &379085125534350525
+--- !u!114 &3841113782440593663
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -549,3 +528,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 44dc1519d74b74b4e8342cf0aa80f9ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!65 &1422320547819187610
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1931298151966786}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0.5, z: 0}
