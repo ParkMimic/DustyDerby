@@ -8,10 +8,13 @@ public class Slime : LivingEntity
     public LayerMask player; // 플레이어 마스크
     public float maxChaseDistance = 1f; // 최대 추적 거리
 
-    private LivingEntity targetEntity;
-    private NavMeshAgent navMeshAgent;
+    public AudioClip hitClip; // 맞는 오디오 클립
+    private AudioSource audio; // 오디오 소스 담는 것
 
-    public float timeBetAttack = 0.5f; // 공격 간격
+    private LivingEntity targetEntity; // 추적할 대상
+    private NavMeshAgent navMeshAgent; // 내브메시
+
+    public float timeBetAttack = 10f; // 공격 간격
     private float lastAttackTime; // 마지막 공격 시점
 
     // 추적할 대상이 있음을 알려주는 컴포넌트
@@ -36,6 +39,8 @@ public class Slime : LivingEntity
         // 초기화
         // 필요한 컴포넌트 가져오기
         navMeshAgent = GetComponent<NavMeshAgent>();
+        timeBetAttack = 0f;
+        audio = GetComponent<AudioSource>();
     }
 
     public void SetUp(EnemyData enemyData)
@@ -47,11 +52,6 @@ public class Slime : LivingEntity
     {
         // 게임 활성화와 동시에 AI 추적 루틴 시작
         StartCoroutine(UpdatePath());
-    }
-
-    void Update()
-    {
-        // 추적 대상의 존재 여부에 따라 다른 애니메이션 재생
     }
 
     // 주기적으로 추적해야 할 대상의 위치를 찾아 경로 갱신
@@ -83,6 +83,7 @@ public class Slime : LivingEntity
                 if (distance < 0.3f)
                 {
                     navMeshAgent.isStopped = true;
+                    navMeshAgent.velocity = Vector3.zero;
                 }
             }
             else
@@ -111,9 +112,9 @@ public class Slime : LivingEntity
         if (isStun) return; // 이미 기절 상태라면 실행 안 함.
 
         isStun = true;
-        Debug.Log("슬라임 기절 시작");
-
         navMeshAgent.isStopped = true; // 기절 상태에서는 이동 못 함.
+
+        audio.PlayOneShot(hitClip);
 
         StartCoroutine(ResumeAfterStun());
     }
@@ -123,6 +124,18 @@ public class Slime : LivingEntity
         yield return new WaitForSeconds(2f); // 2초 동안 기절 상태 유지
         isStun = false; // 기절 해제
         navMeshAgent.isStopped = false; // 기절 해제 후 이동 재개
-        Debug.Log("슬라임 기절 끝");
+    }
+
+    public void OnTriggerEnter(Collider other)
+    {
+        if (other.tag == "Player")
+        {
+            LivingEntity player = other.GetComponent<LivingEntity>();
+            if (lastAttackTime + timeBetAttack < Time.time)
+            {
+                player.Stun();
+                lastAttackTime = Time.time;
+            }
+        }
     }
 }

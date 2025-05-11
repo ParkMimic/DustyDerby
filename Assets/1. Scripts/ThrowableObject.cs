@@ -5,16 +5,20 @@ using UnityEngine;
 public class ThrowableObject : MonoBehaviour
 {
     public bool isThrown;
+    public ParticleSystem hitEffectPrefab;
 
     private void OnCollisionEnter(Collision collision)
     {
         if (!isThrown) return;
-        Debug.Log("충돌 감지됨: " + collision.gameObject.name);
 
         Slime slime = collision.gameObject.GetComponent<Slime>();
         if (slime != null)
         {
-            Debug.Log("슬라임 발견, 기절 시도");
+            Vector3 hitPoint = collision.contacts[0].point;
+            Quaternion hitRotation = Quaternion.LookRotation(collision.contacts[0].normal);
+
+            hitEffectPrefab.Play();
+
             slime.Stun();
         }
 
