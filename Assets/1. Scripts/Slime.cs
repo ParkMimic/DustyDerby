@@ -9,7 +9,8 @@ public class Slime : LivingEntity
     public float maxChaseDistance = 1f; // 최대 추적 거리
 
     public AudioClip hitClip; // 맞는 오디오 클립
-    private AudioSource audio; // 오디오 소스 담는 것
+    private new AudioSource audio; // 오디오 소스 담는 것
+    private Animator anim;
 
     private LivingEntity targetEntity; // 추적할 대상
     private NavMeshAgent navMeshAgent; // 내브메시
@@ -41,6 +42,7 @@ public class Slime : LivingEntity
         navMeshAgent = GetComponent<NavMeshAgent>();
         timeBetAttack = 0f;
         audio = GetComponent<AudioSource>();
+        anim = GetComponent<Animator>();
     }
 
     public void SetUp(EnemyData enemyData)
@@ -80,7 +82,7 @@ public class Slime : LivingEntity
                     navMeshAgent.isStopped = true;
                 }
 
-                if (distance < 0.3f)
+                if (distance < 0.2f)
                 {
                     navMeshAgent.isStopped = true;
                     navMeshAgent.velocity = Vector3.zero;
@@ -90,7 +92,7 @@ public class Slime : LivingEntity
             {
                 navMeshAgent.isStopped = true;
 
-                Collider[] colliders = Physics.OverlapSphere(transform.position, 1f, player);
+                Collider[] colliders = Physics.OverlapSphere(transform.position, 0.6f, player);
                 for (int i = 0; i < colliders.Length; i++)
                 {
                     LivingEntity livingEntity = colliders[i].GetComponent<LivingEntity>();
@@ -114,7 +116,9 @@ public class Slime : LivingEntity
         isStun = true;
         navMeshAgent.isStopped = true; // 기절 상태에서는 이동 못 함.
 
+        
         audio.PlayOneShot(hitClip);
+        anim.SetTrigger("isHit");
 
         StartCoroutine(ResumeAfterStun());
     }
@@ -128,6 +132,7 @@ public class Slime : LivingEntity
 
     public void OnTriggerEnter(Collider other)
     {
+        if (isStun) return;
         if (other.tag == "Player")
         {
             LivingEntity player = other.GetComponent<LivingEntity>();

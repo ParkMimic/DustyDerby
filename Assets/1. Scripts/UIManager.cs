@@ -24,6 +24,6 @@ public class UIManager : MonoBehaviour
     // 점수 텍스트 갱신
     public void UpdateScoreText(int newScore)
     {
-        scoreText.text = newScore + " / 12";
+        scoreText.text = newScore + " / 15";
     }
 }

@@ -1,3 +1,4 @@
+using NUnit.Framework.Constraints;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -77,7 +78,7 @@ public class PlayerMovement : LivingEntity
 
         // 부모로 붙이고 위치 지정
         obj.transform.SetParent(holdPosition);
-        obj.transform.localPosition = Vector3.up * 1.5f;
+        obj.transform.localPosition = Vector3.up * 1.2f;
 
         // 방향 정렬
         obj.transform.localRotation = Quaternion.identity;
@@ -126,7 +127,6 @@ public class PlayerMovement : LivingEntity
 
         if (throwable != null)
         {
-            Debug.Log("던짐 상태 true");
             throwable.isThrown = true;
         }
 

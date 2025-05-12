@@ -14,10 +14,22 @@ public class ThrowableObject : MonoBehaviour
         Slime slime = collision.gameObject.GetComponent<Slime>();
         if (slime != null)
         {
-            Vector3 hitPoint = collision.contacts[0].point;
-            Quaternion hitRotation = Quaternion.LookRotation(collision.contacts[0].normal);
+            if (collision.contacts.Length > 0)
+            {
+                // 충돌 처리
+                Vector3 hitPoint = collision.contacts[0].point;
+                Quaternion hitRotation = Quaternion.LookRotation(collision.contacts[0].normal);
 
-            hitEffectPrefab.Play();
+                hitEffectPrefab.transform.position = hitPoint;
+                hitEffectPrefab.transform.rotation = hitRotation;
+
+                ParticleSystem effect = Instantiate(hitEffectPrefab, hitPoint, hitRotation);
+
+                // 이펙트 실행
+                effect.Play();
+
+                Destroy(effect.gameObject, 1f);
+            }
 
             slime.Stun();
         }

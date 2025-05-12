@@ -1,7 +1,4 @@
-using JetBrains.Annotations;
-using TMPro.EditorUtilities;
 using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
@@ -40,6 +37,16 @@ public class GameManager : MonoBehaviour
         }
 
         audioSource = GetComponent<AudioSource>();
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            Application.Quit();
+        }
+
+        Cursor.lockState = CursorLockMode.Locked;
     }
 
     public void AddScore(int newScore)

@@ -1,6 +1,4 @@
-using UnityEditor.Build.Content;
 using UnityEngine;
-using UnityEngine.EventSystems;
 
 // 플레이어가 캐릭터를 조작하기 위한 사용자 입력 감지
 // 감지된 입력값을 다른 컴포넌트가 사용할 수 있도록 제공

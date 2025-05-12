@@ -3,17 +3,16 @@ using UnityEngine.SceneManagement;
 
 public class Intro : MonoBehaviour
 {
-    public Animation animation;
-    private void Awake()
+    public void GameStart()
     {
-        animation = GetComponent<Animation>();
+        SceneManager.LoadScene("Room_Unity");
     }
 
-    void Update()
+    private void Update()
     {
-        if (Input.anyKeyDown == true)
+        if (Input.GetKeyDown(KeyCode.Escape))
         {
-            SceneManager.LoadScene("Room_Unity");
+            Application.Quit();
         }
     }
 }
